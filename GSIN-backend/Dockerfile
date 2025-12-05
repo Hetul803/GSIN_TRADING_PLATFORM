@@ -1,7 +1,7 @@
 # GSIN Backend Dockerfile
 # PHASE 6: Production-ready containerization
 
-FROM python:3.9-slim
+FROM python:3.10-slim
 
 # Set working directory
 WORKDIR /app
