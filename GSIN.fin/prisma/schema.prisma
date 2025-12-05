@@ -1,0 +1,164 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  PRO
+  CREATOR
+  ADMIN
+}
+
+enum SubscriptionTier {
+  USER
+  PRO
+  CREATOR
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELED
+  PAST_DUE
+  TRIAL
+}
+
+enum StrategyVisibility {
+  PUBLIC
+  PRIVATE
+  GROUP_ONLY
+}
+
+enum GroupRole {
+  OWNER
+  MODERATOR
+  MEMBER
+}
+
+model User {
+  id               String              @id @default(uuid())
+  email            String              @unique
+  name             String?
+  role             UserRole            @default(USER)
+  subscriptionTier SubscriptionTier    @default(USER)
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+
+  subscriptions    UserSubscription[]
+  ownedStrategies  StrategyMeta[]     @relation("StrategyOwner")
+  ownedGroups      Group[]            @relation("GroupOwner")
+  groupMemberships GroupMember[]
+  royalties        RoyaltySummary[]   @relation("CreatorRoyalties")
+
+  @@map("users")
+}
+
+model SubscriptionPlan {
+  id                    String   @id @default(uuid())
+  name                  String
+  priceMonthly          Int
+  performanceFeePercent Float
+  isCreatorPlan         Boolean  @default(false)
+  description           String
+  isActive              Boolean  @default(true)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  subscriptions UserSubscription[]
+
+  @@map("subscription_plans")
+}
+
+model UserSubscription {
+  id                 String             @id @default(uuid())
+  userId             String
+  planId             String
+  status             SubscriptionStatus @default(ACTIVE)
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  trialEndsAt        DateTime?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  user User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan SubscriptionPlan @relation(fields: [planId], references: [id])
+
+  @@map("user_subscriptions")
+}
+
+model StrategyMeta {
+  id               String             @id @default(uuid())
+  ownerId          String
+  name             String
+  visibility       StrategyVisibility @default(PRIVATE)
+  isCreatorOnly    Boolean            @default(false)
+  summaryStatsJson Json?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  owner     User              @relation("StrategyOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  royalties RoyaltySummary[]
+
+  @@map("strategy_meta")
+}
+
+model Group {
+  id             String   @id @default(uuid())
+  ownerId        String
+  name           String
+  description    String
+  maxSize        Int?
+  isDiscoverable Boolean  @default(false)
+  isPaid         Boolean  @default(false)
+  priceMonthly   Int?
+  inviteCode     String?  @unique
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  owner   User          @relation("GroupOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  members GroupMember[]
+
+  @@map("groups")
+}
+
+model GroupMember {
+  id        String    @id @default(uuid())
+  groupId   String
+  userId    String
+  role      GroupRole @default(MEMBER)
+  joinedAt  DateTime  @default(now())
+  isActive  Boolean   @default(true)
+
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, userId])
+  @@map("group_members")
+}
+
+model AdminSetting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("admin_settings")
+}
+
+model RoyaltySummary {
+  id                   String   @id @default(uuid())
+  strategyId           String
+  creatorId            String
+  totalProfitGenerated Float    @default(0)
+  totalRoyaltyPaid     Float    @default(0)
+  updatedAt            DateTime @updatedAt
+
+  strategy StrategyMeta @relation(fields: [strategyId], references: [id], onDelete: Cascade)
+  creator  User         @relation("CreatorRoyalties", fields: [creatorId], references: [id], onDelete: Cascade)
+
+  @@unique([strategyId, creatorId])
+  @@map("royalty_summaries")
+}

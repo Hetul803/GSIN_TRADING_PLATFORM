@@ -1,0 +1,12 @@
+global-exclude *.pyc __pycache__ .DS_Store
+prune .venv
+prune .venv_*
+prune build
+prune dist
+prune .pytest_cache
+prune .mypy_cache
+prune .ipynb_checkpoints
+prune examples
+prune runs
+prune tests
+prune archive
