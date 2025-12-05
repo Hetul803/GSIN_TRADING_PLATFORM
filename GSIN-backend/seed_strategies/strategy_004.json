@@ -1,0 +1,51 @@
+{
+  "name": "Crypto Momentum Trend",
+  "description": "Trade momentum trends on major crypto pairs using EMAs and volume.",
+  "asset_type": "CRYPTO",
+  "symbol_universe": ["BTC-USD", "ETH-USD", "SOL-USD"],
+  "timeframe": "4H",
+  "parameters": {
+    "fast_ema": 20,
+    "slow_ema": 50,
+    "volume_ma_period": 30
+  },
+  "ruleset": {
+    "entry": [
+      {
+        "indicator": "EMA",
+        "field": "close",
+        "period": 20,
+        "condition": "gt",
+        "compare_to": { "indicator": "EMA", "field": "close", "period": 50 }
+      },
+      {
+        "indicator": "VOLUME",
+        "condition": "gt_avg",
+        "lookback_bars": 30,
+        "multiplier": 1.2
+      }
+    ],
+    "exit": [
+      {
+        "indicator": "EMA",
+        "field": "close",
+        "period": 20,
+        "condition": "lt",
+        "compare_to": { "indicator": "EMA", "field": "close", "period": 50 }
+      }
+    ],
+    "filters": []
+  },
+  "initial_capital_range": {
+    "min": 100,
+    "max": 10000
+  },
+  "risk_profile": {
+    "max_risk_per_trade_percent": 3,
+    "max_positions": 3,
+    "direction": "LONG_ONLY"
+  },
+  "backtest_symbol": "BTC-USD",
+  "timeframe": "1d"
+}
+

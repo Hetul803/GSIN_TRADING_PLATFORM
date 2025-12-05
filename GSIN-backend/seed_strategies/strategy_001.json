@@ -1,0 +1,52 @@
+{
+  "name": "SMA 50/200 Trend Follower (Stocks)",
+  "description": "Classic long-only moving average trend follower on large-cap US equities.",
+  "asset_type": "STOCK",
+  "symbol_universe": ["AAPL", "MSFT", "GOOGL", "AMZN", "META", "TSLA"],
+  "timeframe": "1D",
+  "parameters": {
+    "fast_sma": 50,
+    "slow_sma": 200,
+    "atr_period": 14,
+    "atr_stop_multiplier": 3.0
+  },
+  "ruleset": {
+    "entry": [
+      {
+        "indicator": "SMA",
+        "field": "close",
+        "period": 50,
+        "condition": "crosses_above",
+        "compare_to": { "indicator": "SMA", "field": "close", "period": 200 }
+      }
+    ],
+    "exit": [
+      {
+        "indicator": "SMA",
+        "field": "close",
+        "period": 50,
+        "condition": "crosses_below",
+        "compare_to": { "indicator": "SMA", "field": "close", "period": 200 }
+      }
+    ],
+    "filters": [
+      {
+        "indicator": "VOLUME",
+        "condition": "gt",
+        "value": 1000000
+      }
+    ]
+  },
+  "initial_capital_range": {
+    "min": 1000,
+    "max": 50000
+  },
+  "risk_profile": {
+    "max_risk_per_trade_percent": 2,
+    "max_positions": 5,
+    "direction": "LONG_ONLY"
+  },
+  "backtest_symbol": "AAPL",
+  "timeframe": "1d"
+}
+

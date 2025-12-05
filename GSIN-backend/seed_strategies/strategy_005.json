@@ -1,0 +1,41 @@
+{
+  "name": "Volatility Squeeze Breakout",
+  "description": "Trade volatility squeezes when low volatility expands into a breakout.",
+  "asset_type": "STOCK",
+  "symbol_universe": ["SPY", "QQQ", "IWM"],
+  "timeframe": "1D",
+  "parameters": {
+    "bb_period": 20,
+    "bb_stddev": 2,
+    "keltner_mult": 1.5
+  },
+  "ruleset": {
+    "entry": [
+      {
+        "indicator": "SQUEEZE",
+        "condition": "squeeze_on_to_off"
+      }
+    ],
+    "exit": [
+      {
+        "indicator": "PRICE",
+        "field": "close",
+        "condition": "lt_trailing_stop",
+        "trailing_percent": 4
+      }
+    ],
+    "filters": []
+  },
+  "initial_capital_range": {
+    "min": 1000,
+    "max": 20000
+  },
+  "risk_profile": {
+    "max_risk_per_trade_percent": 2,
+    "max_positions": 4,
+    "direction": "LONG_ONLY"
+  },
+  "backtest_symbol": "SPY",
+  "timeframe": "1d"
+}
+

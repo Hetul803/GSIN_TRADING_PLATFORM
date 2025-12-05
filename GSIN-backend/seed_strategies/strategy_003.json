@@ -1,0 +1,48 @@
+{
+  "name": "Range Breakout (High Volume)",
+  "description": "Buy breakouts above recent resistance on high volume.",
+  "asset_type": "STOCK",
+  "symbol_universe": ["AAPL", "TSLA", "AMD", "NVDA", "META"],
+  "timeframe": "1H",
+  "parameters": {
+    "lookback_days": 20,
+    "volume_multiplier": 1.5
+  },
+  "ruleset": {
+    "entry": [
+      {
+        "indicator": "PRICE",
+        "field": "close",
+        "condition": "gt_high",
+        "lookback_bars": 20
+      },
+      {
+        "indicator": "VOLUME",
+        "condition": "gt_avg",
+        "lookback_bars": 20,
+        "multiplier": 1.5
+      }
+    ],
+    "exit": [
+      {
+        "indicator": "PRICE",
+        "field": "close",
+        "condition": "lt_trailing_stop",
+        "trailing_percent": 5
+      }
+    ],
+    "filters": []
+  },
+  "initial_capital_range": {
+    "min": 2000,
+    "max": 50000
+  },
+  "risk_profile": {
+    "max_risk_per_trade_percent": 2.5,
+    "max_positions": 5,
+    "direction": "LONG_ONLY"
+  },
+  "backtest_symbol": "AAPL",
+  "timeframe": "1d"
+}
+

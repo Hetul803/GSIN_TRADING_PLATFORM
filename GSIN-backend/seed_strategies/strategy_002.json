@@ -1,0 +1,43 @@
+{
+  "name": "RSI Mean Reversion (Oversold Rebound)",
+  "description": "Buy oversold dips on high-quality stocks using RSI.",
+  "asset_type": "STOCK",
+  "symbol_universe": ["AAPL", "MSFT", "NVDA", "GOOGL", "AMZN"],
+  "timeframe": "1D",
+  "parameters": {
+    "rsi_period": 14,
+    "oversold_level": 30,
+    "exit_rsi": 50
+  },
+  "ruleset": {
+    "entry": [
+      {
+        "indicator": "RSI",
+        "period": 14,
+        "condition": "lt",
+        "value": 30
+      }
+    ],
+    "exit": [
+      {
+        "indicator": "RSI",
+        "period": 14,
+        "condition": "gt",
+        "value": 50
+      }
+    ],
+    "filters": []
+  },
+  "initial_capital_range": {
+    "min": 500,
+    "max": 10000
+  },
+  "risk_profile": {
+    "max_risk_per_trade_percent": 1.5,
+    "max_positions": 10,
+    "direction": "LONG_ONLY"
+  },
+  "backtest_symbol": "AAPL",
+  "timeframe": "1d"
+}
+

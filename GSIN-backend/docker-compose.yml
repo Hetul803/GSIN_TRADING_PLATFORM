@@ -1,0 +1,84 @@
+# GSIN Platform Docker Compose
+# PHASE 6: Production orchestration
+
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gsin-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://gsin:gsin_password@postgres:5432/gsin
+      - ALLOWED_ORIGINS=http://localhost:3000,https://gsin.trade
+      - REQUEST_SIGNING_SECRET=${REQUEST_SIGNING_SECRET}
+      - BROKER_ENCRYPTION_KEY=${BROKER_ENCRYPTION_KEY}
+      - ALPACA_API_KEY=${ALPACA_API_KEY}
+      - ALPACA_SECRET_KEY=${ALPACA_SECRET_KEY}
+      - ALPACA_BASE_URL=${ALPACA_BASE_URL}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+    volumes:
+      - ./mcn_store:/app/mcn_store
+      - ./config:/app/config
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    build:
+      context: ../GSIN.fin
+      dockerfile: Dockerfile
+    container_name: gsin-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_BACKEND_URL=http://backend:8000
+      - NEXT_PUBLIC_GOOGLE_CLIENT_ID=${NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: gsin-postgres
+    environment:
+      - POSTGRES_USER=gsin
+      - POSTGRES_PASSWORD=gsin_password
+      - POSTGRES_DB=gsin
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gsin"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  nginx:
+    image: nginx:alpine
+    container_name: gsin-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - backend
+      - frontend
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+

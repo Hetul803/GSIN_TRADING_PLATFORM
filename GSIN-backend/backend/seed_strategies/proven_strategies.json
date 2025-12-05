@@ -1,0 +1,2483 @@
+[
+  {
+    "name": "Momentum Breakout Strategy",
+    "description": "High-probability momentum breakout with volume confirmation. Targets stocks breaking above resistance with strong volume.",
+    "entry_rules": [
+      {
+        "indicator": "price",
+        "condition": "above",
+        "value": "sma_20",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "volume",
+        "condition": "above",
+        "value": "volume_sma_20 * 1.5",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "rsi",
+        "condition": "between",
+        "value": [
+          50,
+          70
+        ],
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "macd",
+        "condition": "cross_above",
+        "value": "signal",
+        "timeframe": "1d"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "price",
+        "condition": "below",
+        "value": "sma_20",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "rsi",
+        "condition": "above",
+        "value": 80,
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "profit_target",
+        "condition": "reached",
+        "value": 0.05
+      },
+      {
+        "indicator": "stop_loss",
+        "condition": "reached",
+        "value": 0.02
+      }
+    ],
+    "market": "stocks",
+    "timeframe": "1d",
+    "risk": {
+      "max_position_size": 0.1,
+      "stop_loss_pct": 0.02,
+      "take_profit_pct": 0.05,
+      "max_daily_loss": 0.03
+    },
+    "examples": [
+      "AAPL",
+      "MSFT",
+      "GOOGL",
+      "AMZN"
+    ],
+    "confidence": 0.9,
+    "historical_winrate": 0.85,
+    "expected_rr": 2.5
+  },
+  {
+    "name": "Mean Reversion RSI Strategy",
+    "description": "Mean reversion strategy using RSI oversold/overbought conditions. Best in ranging markets.",
+    "entry_rules": [
+      {
+        "indicator": "rsi",
+        "condition": "below",
+        "value": 30,
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "price",
+        "condition": "near",
+        "value": "bollinger_lower",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "volume",
+        "condition": "above",
+        "value": "volume_sma_20",
+        "timeframe": "1d"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "rsi",
+        "condition": "above",
+        "value": 70,
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "price",
+        "condition": "near",
+        "value": "bollinger_upper",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "stop_loss",
+        "condition": "reached",
+        "value": 0.015
+      }
+    ],
+    "market": "stocks",
+    "timeframe": "1d",
+    "risk": {
+      "max_position_size": 0.08,
+      "stop_loss_pct": 0.015,
+      "take_profit_pct": 0.03,
+      "max_daily_loss": 0.02
+    },
+    "examples": [
+      "SPY",
+      "QQQ",
+      "IWM"
+    ],
+    "confidence": 0.85,
+    "historical_winrate": 0.75,
+    "expected_rr": 2.0
+  },
+  {
+    "name": "Trend Following EMA Crossover",
+    "description": "Classic trend following strategy using EMA crossovers. Works best in trending markets.",
+    "entry_rules": [
+      {
+        "indicator": "ema_9",
+        "condition": "cross_above",
+        "value": "ema_21",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "ema_21",
+        "condition": "above",
+        "value": "ema_50",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "volume",
+        "condition": "above",
+        "value": "volume_sma_20",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "atr",
+        "condition": "below",
+        "value": "atr_sma_20 * 1.2",
+        "timeframe": "1d"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "ema_9",
+        "condition": "cross_below",
+        "value": "ema_21",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "stop_loss",
+        "condition": "reached",
+        "value": "atr * 2"
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "reached",
+        "value": "atr * 4"
+      }
+    ],
+    "market": "stocks",
+    "timeframe": "1d",
+    "risk": {
+      "max_position_size": 0.12,
+      "stop_loss_pct": 0.025,
+      "take_profit_pct": 0.06,
+      "max_daily_loss": 0.03
+    },
+    "examples": [
+      "TSLA",
+      "NVDA",
+      "AMD"
+    ],
+    "confidence": 0.88,
+    "historical_winrate": 0.78,
+    "expected_rr": 2.4
+  },
+  {
+    "name": "Volume-Price Divergence Strategy",
+    "description": "Detects divergences between price and volume to identify potential reversals.",
+    "entry_rules": [
+      {
+        "indicator": "price",
+        "condition": "making_new_high",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "volume",
+        "condition": "decreasing",
+        "value": "volume_sma_20",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "rsi",
+        "condition": "divergence",
+        "value": "bearish",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "macd",
+        "condition": "divergence",
+        "value": "bearish",
+        "timeframe": "1d"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "price",
+        "condition": "reversal_confirmed",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "stop_loss",
+        "condition": "reached",
+        "value": 0.02
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "reached",
+        "value": 0.04
+      }
+    ],
+    "market": "stocks",
+    "timeframe": "1d",
+    "risk": {
+      "max_position_size": 0.07,
+      "stop_loss_pct": 0.02,
+      "take_profit_pct": 0.04,
+      "max_daily_loss": 0.02
+    },
+    "examples": [
+      "SPY",
+      "QQQ"
+    ],
+    "confidence": 0.82,
+    "historical_winrate": 0.72,
+    "expected_rr": 2.0
+  },
+  {
+    "name": "VWAP Bounce Strategy",
+    "description": "Trades bounces off VWAP with volume confirmation. Effective for intraday trading.",
+    "entry_rules": [
+      {
+        "indicator": "price",
+        "condition": "bounces_off",
+        "value": "vwap",
+        "timeframe": "5m"
+      },
+      {
+        "indicator": "volume",
+        "condition": "above",
+        "value": "volume_sma_20 * 1.3",
+        "timeframe": "5m"
+      },
+      {
+        "indicator": "rsi",
+        "condition": "between",
+        "value": [
+          40,
+          60
+        ],
+        "timeframe": "5m"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "price",
+        "condition": "reaches",
+        "value": "vwap + atr",
+        "timeframe": "5m"
+      },
+      {
+        "indicator": "stop_loss",
+        "condition": "reached",
+        "value": "atr * 1.5"
+      },
+      {
+        "indicator": "time_based",
+        "condition": "end_of_day",
+        "timeframe": "5m"
+      }
+    ],
+    "market": "stocks",
+    "timeframe": "5m",
+    "risk": {
+      "max_position_size": 0.1,
+      "stop_loss_pct": 0.01,
+      "take_profit_pct": 0.02,
+      "max_daily_loss": 0.02
+    },
+    "examples": [
+      "SPY",
+      "QQQ",
+      "AAPL"
+    ],
+    "confidence": 0.8,
+    "historical_winrate": 0.7,
+    "expected_rr": 2.0
+  },
+  {
+    "name": "Breakout with Pullback Strategy",
+    "description": "Waits for pullback after initial breakout before entering. Reduces false signals.",
+    "entry_rules": [
+      {
+        "indicator": "price",
+        "condition": "broke_above",
+        "value": "resistance",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "price",
+        "condition": "pulls_back_to",
+        "value": "resistance_turned_support",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "volume",
+        "condition": "confirms",
+        "value": "breakout_volume",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "rsi",
+        "condition": "between",
+        "value": [
+          45,
+          65
+        ],
+        "timeframe": "1d"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "price",
+        "condition": "breaks_below",
+        "value": "support",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "reached",
+        "value": 0.06
+      },
+      {
+        "indicator": "stop_loss",
+        "condition": "reached",
+        "value": 0.025
+      }
+    ],
+    "market": "stocks",
+    "timeframe": "1d",
+    "risk": {
+      "max_position_size": 0.1,
+      "stop_loss_pct": 0.025,
+      "take_profit_pct": 0.06,
+      "max_daily_loss": 0.03
+    },
+    "examples": [
+      "TSLA",
+      "NVDA",
+      "AMD",
+      "AAPL"
+    ],
+    "confidence": 0.87,
+    "historical_winrate": 0.8,
+    "expected_rr": 2.4
+  },
+  {
+    "name": "Gap Fill Strategy",
+    "description": "Trades gaps that tend to fill. Works well with volume confirmation.",
+    "entry_rules": [
+      {
+        "indicator": "price",
+        "condition": "gaps_up",
+        "value": "previous_close * 1.02",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "volume",
+        "condition": "below",
+        "value": "average_volume",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "rsi",
+        "condition": "above",
+        "value": 70,
+        "timeframe": "1d"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "price",
+        "condition": "fills_gap",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "stop_loss",
+        "condition": "reached",
+        "value": 0.015
+      },
+      {
+        "indicator": "time_based",
+        "condition": "after_2_hours",
+        "timeframe": "1d"
+      }
+    ],
+    "market": "stocks",
+    "timeframe": "1d",
+    "risk": {
+      "max_position_size": 0.06,
+      "stop_loss_pct": 0.015,
+      "take_profit_pct": 0.03,
+      "max_daily_loss": 0.02
+    },
+    "examples": [
+      "SPY",
+      "QQQ",
+      "IWM"
+    ],
+    "confidence": 0.75,
+    "historical_winrate": 0.68,
+    "expected_rr": 2.0
+  },
+  {
+    "name": "Multi-Timeframe Trend Alignment",
+    "description": "Requires trend alignment across multiple timeframes for high-probability entries.",
+    "entry_rules": [
+      {
+        "indicator": "trend",
+        "condition": "aligned",
+        "value": [
+          "1h",
+          "4h",
+          "1d"
+        ],
+        "timeframe": "multi"
+      },
+      {
+        "indicator": "price",
+        "condition": "above",
+        "value": "sma_50",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "volume",
+        "condition": "above",
+        "value": "volume_sma_20",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "macd",
+        "condition": "positive",
+        "timeframe": "1d"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "trend",
+        "condition": "misaligned",
+        "value": [
+          "1h",
+          "4h",
+          "1d"
+        ],
+        "timeframe": "multi"
+      },
+      {
+        "indicator": "stop_loss",
+        "condition": "reached",
+        "value": 0.03
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "reached",
+        "value": 0.07
+      }
+    ],
+    "market": "stocks",
+    "timeframe": "1d",
+    "risk": {
+      "max_position_size": 0.12,
+      "stop_loss_pct": 0.03,
+      "take_profit_pct": 0.07,
+      "max_daily_loss": 0.03
+    },
+    "examples": [
+      "AAPL",
+      "MSFT",
+      "GOOGL",
+      "AMZN"
+    ],
+    "confidence": 0.92,
+    "historical_winrate": 0.82,
+    "expected_rr": 2.3
+  },
+  {
+    "name": "Bollinger Band Squeeze Strategy",
+    "description": "Trades breakouts from Bollinger Band squeezes. High volatility expansion plays.",
+    "entry_rules": [
+      {
+        "indicator": "bollinger_bands",
+        "condition": "squeeze",
+        "value": "width < 20_percentile",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "price",
+        "condition": "breaks_above",
+        "value": "bollinger_upper",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "volume",
+        "condition": "above",
+        "value": "volume_sma_20 * 1.5",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "rsi",
+        "condition": "between",
+        "value": [
+          50,
+          75
+        ],
+        "timeframe": "1d"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "price",
+        "condition": "reverts_to",
+        "value": "bollinger_middle",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "stop_loss",
+        "condition": "reached",
+        "value": 0.02
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "reached",
+        "value": 0.05
+      }
+    ],
+    "market": "stocks",
+    "timeframe": "1d",
+    "risk": {
+      "max_position_size": 0.09,
+      "stop_loss_pct": 0.02,
+      "take_profit_pct": 0.05,
+      "max_daily_loss": 0.025
+    },
+    "examples": [
+      "TSLA",
+      "NVDA",
+      "AMD"
+    ],
+    "confidence": 0.85,
+    "historical_winrate": 0.76,
+    "expected_rr": 2.5
+  },
+  {
+    "name": "Support/Resistance Bounce Strategy",
+    "description": "Trades bounces off key support/resistance levels with confirmation.",
+    "entry_rules": [
+      {
+        "indicator": "price",
+        "condition": "bounces_off",
+        "value": "support_level",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "volume",
+        "condition": "confirms",
+        "value": "bounce_volume",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "rsi",
+        "condition": "oversold",
+        "value": "< 35",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "candlestick",
+        "condition": "reversal_pattern",
+        "value": "hammer_doji",
+        "timeframe": "1d"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "price",
+        "condition": "reaches",
+        "value": "resistance_level",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "stop_loss",
+        "condition": "reached",
+        "value": 0.02
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "reached",
+        "value": 0.04
+      }
+    ],
+    "market": "stocks",
+    "timeframe": "1d",
+    "risk": {
+      "max_position_size": 0.08,
+      "stop_loss_pct": 0.02,
+      "take_profit_pct": 0.04,
+      "max_daily_loss": 0.02
+    },
+    "examples": [
+      "SPY",
+      "QQQ",
+      "IWM"
+    ],
+    "confidence": 0.8,
+    "historical_winrate": 0.73,
+    "expected_rr": 2.0
+  },
+  {
+    "name": "MACD Histogram Divergence Strategy",
+    "description": "Trades MACD histogram divergences for early trend reversal signals.",
+    "entry_rules": [
+      {
+        "indicator": "macd_histogram",
+        "condition": "divergence",
+        "value": "bullish",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "price",
+        "condition": "making_new_low",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "volume",
+        "condition": "decreasing",
+        "value": "volume_sma_20",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "rsi",
+        "condition": "below",
+        "value": 40,
+        "timeframe": "1d"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "macd_histogram",
+        "condition": "reverses",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "stop_loss",
+        "condition": "reached",
+        "value": 0.02
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "reached",
+        "value": 0.04
+      }
+    ],
+    "market": "stocks",
+    "timeframe": "1d",
+    "risk": {
+      "max_position_size": 0.08,
+      "stop_loss_pct": 0.02,
+      "take_profit_pct": 0.04,
+      "max_daily_loss": 0.02
+    },
+    "examples": [
+      "SPY",
+      "QQQ",
+      "IWM"
+    ],
+    "confidence": 0.78,
+    "historical_winrate": 0.71,
+    "expected_rr": 2.0
+  },
+  {
+    "name": "Earnings Play Strategy",
+    "description": "Trades around earnings announcements with volatility expansion plays.",
+    "entry_rules": [
+      {
+        "indicator": "earnings_date",
+        "condition": "within",
+        "value": "3_days",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "implied_volatility",
+        "condition": "above",
+        "value": "iv_percentile_80",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "volume",
+        "condition": "above",
+        "value": "volume_sma_20 * 2",
+        "timeframe": "1d"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "earnings_date",
+        "condition": "passed",
+        "value": "2_days",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "stop_loss",
+        "condition": "reached",
+        "value": 0.03
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "reached",
+        "value": 0.06
+      }
+    ],
+    "market": "stocks",
+    "timeframe": "1d",
+    "risk": {
+      "max_position_size": 0.06,
+      "stop_loss_pct": 0.03,
+      "take_profit_pct": 0.06,
+      "max_daily_loss": 0.025
+    },
+    "examples": [
+      "AAPL",
+      "MSFT",
+      "GOOGL",
+      "AMZN"
+    ],
+    "confidence": 0.75,
+    "historical_winrate": 0.65,
+    "expected_rr": 2.0
+  },
+  {
+    "name": "Sector Rotation Strategy",
+    "description": "Trades sector rotation by identifying leading and lagging sectors.",
+    "entry_rules": [
+      {
+        "indicator": "sector_performance",
+        "condition": "top_3",
+        "value": "sectors",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "relative_strength",
+        "condition": "above",
+        "value": "spy_performance",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "volume",
+        "condition": "above",
+        "value": "volume_sma_20",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "momentum",
+        "condition": "positive",
+        "timeframe": "1d"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "sector_performance",
+        "condition": "drops_out_of_top_5",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "stop_loss",
+        "condition": "reached",
+        "value": 0.03
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "reached",
+        "value": 0.08
+      }
+    ],
+    "market": "stocks",
+    "timeframe": "1d",
+    "risk": {
+      "max_position_size": 0.1,
+      "stop_loss_pct": 0.03,
+      "take_profit_pct": 0.08,
+      "max_daily_loss": 0.03
+    },
+    "examples": [
+      "XLK",
+      "XLF",
+      "XLE",
+      "XLV"
+    ],
+    "confidence": 0.83,
+    "historical_winrate": 0.77,
+    "expected_rr": 2.67
+  },
+  {
+    "name": "High-Frequency Mean Reversion",
+    "description": "Intraday mean reversion on 5-minute charts with tight stops.",
+    "entry_rules": [
+      {
+        "indicator": "price",
+        "condition": "deviates_from",
+        "value": "vwap",
+        "timeframe": "5m"
+      },
+      {
+        "indicator": "rsi",
+        "condition": "extreme",
+        "value": "< 25 or > 75",
+        "timeframe": "5m"
+      },
+      {
+        "indicator": "volume",
+        "condition": "spike",
+        "value": "volume_sma_20 * 1.2",
+        "timeframe": "5m"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "price",
+        "condition": "returns_to",
+        "value": "vwap",
+        "timeframe": "5m"
+      },
+      {
+        "indicator": "stop_loss",
+        "condition": "reached",
+        "value": 0.005
+      },
+      {
+        "indicator": "time_based",
+        "condition": "end_of_hour",
+        "timeframe": "5m"
+      }
+    ],
+    "market": "stocks",
+    "timeframe": "5m",
+    "risk": {
+      "max_position_size": 0.05,
+      "stop_loss_pct": 0.005,
+      "take_profit_pct": 0.01,
+      "max_daily_loss": 0.015
+    },
+    "examples": [
+      "SPY",
+      "QQQ"
+    ],
+    "confidence": 0.72,
+    "historical_winrate": 0.68,
+    "expected_rr": 2.0
+  },
+  {
+    "name": "Fibonacci Retracement Strategy",
+    "description": "Trades Fibonacci retracement levels with volume confirmation.",
+    "entry_rules": [
+      {
+        "indicator": "price",
+        "condition": "at_fibonacci",
+        "value": "0.618_retracement",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "volume",
+        "condition": "confirms",
+        "value": "bounce_volume",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "rsi",
+        "condition": "oversold",
+        "value": "< 35",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "candlestick",
+        "condition": "reversal_pattern",
+        "value": "hammer",
+        "timeframe": "1d"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "price",
+        "condition": "reaches",
+        "value": "fibonacci_0.382",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "stop_loss",
+        "condition": "reached",
+        "value": 0.02
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "reached",
+        "value": 0.05
+      }
+    ],
+    "market": "stocks",
+    "timeframe": "1d",
+    "risk": {
+      "max_position_size": 0.08,
+      "stop_loss_pct": 0.02,
+      "take_profit_pct": 0.05,
+      "max_daily_loss": 0.02
+    },
+    "examples": [
+      "AAPL",
+      "MSFT",
+      "GOOGL"
+    ],
+    "confidence": 0.79,
+    "historical_winrate": 0.74,
+    "expected_rr": 2.5
+  },
+  {
+    "name": "Options Flow Strategy",
+    "description": "Trades based on unusual options activity and flow data.",
+    "entry_rules": [
+      {
+        "indicator": "options_volume",
+        "condition": "unusual",
+        "value": "above_90th_percentile",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "options_flow",
+        "condition": "bullish",
+        "value": "call_buying",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "price",
+        "condition": "confirms",
+        "value": "options_signal",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "volume",
+        "condition": "above",
+        "value": "volume_sma_20",
+        "timeframe": "1d"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "options_flow",
+        "condition": "reverses",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "stop_loss",
+        "condition": "reached",
+        "value": 0.025
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "reached",
+        "value": 0.06
+      }
+    ],
+    "market": "stocks",
+    "timeframe": "1d",
+    "risk": {
+      "max_position_size": 0.07,
+      "stop_loss_pct": 0.025,
+      "take_profit_pct": 0.06,
+      "max_daily_loss": 0.025
+    },
+    "examples": [
+      "TSLA",
+      "NVDA",
+      "AMD"
+    ],
+    "confidence": 0.81,
+    "historical_winrate": 0.76,
+    "expected_rr": 2.4
+  },
+  {
+    "name": "News Sentiment Momentum Strategy",
+    "description": "Trades momentum based on news sentiment scores and price action.",
+    "entry_rules": [
+      {
+        "indicator": "sentiment_score",
+        "condition": "above",
+        "value": 0.7,
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "price",
+        "condition": "rising",
+        "value": "3_consecutive_up_days",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "volume",
+        "condition": "above",
+        "value": "volume_sma_20 * 1.3",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "rsi",
+        "condition": "between",
+        "value": [
+          55,
+          75
+        ],
+        "timeframe": "1d"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "sentiment_score",
+        "condition": "drops_below",
+        "value": 0.5,
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "stop_loss",
+        "condition": "reached",
+        "value": 0.02
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "reached",
+        "value": 0.05
+      }
+    ],
+    "market": "stocks",
+    "timeframe": "1d",
+    "risk": {
+      "max_position_size": 0.09,
+      "stop_loss_pct": 0.02,
+      "take_profit_pct": 0.05,
+      "max_daily_loss": 0.025
+    },
+    "examples": [
+      "AAPL",
+      "MSFT",
+      "GOOGL",
+      "AMZN"
+    ],
+    "confidence": 0.84,
+    "historical_winrate": 0.78,
+    "expected_rr": 2.5
+  },
+  {
+    "name": "Double Top/Bottom Reversal Strategy",
+    "description": "Trades classic double top/bottom reversal patterns with confirmation.",
+    "entry_rules": [
+      {
+        "indicator": "pattern",
+        "condition": "double_bottom",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "volume",
+        "condition": "confirms",
+        "value": "pattern_volume",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "rsi",
+        "condition": "divergence",
+        "value": "bullish",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "price",
+        "condition": "breaks_neckline",
+        "timeframe": "1d"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "pattern",
+        "condition": "target_reached",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "stop_loss",
+        "condition": "reached",
+        "value": 0.02
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "reached",
+        "value": 0.05
+      }
+    ],
+    "market": "stocks",
+    "timeframe": "1d",
+    "risk": {
+      "max_position_size": 0.08,
+      "stop_loss_pct": 0.02,
+      "take_profit_pct": 0.05,
+      "max_daily_loss": 0.02
+    },
+    "examples": [
+      "SPY",
+      "QQQ",
+      "IWM"
+    ],
+    "confidence": 0.77,
+    "historical_winrate": 0.72,
+    "expected_rr": 2.5
+  },
+  {
+    "name": "Low Volatility Breakout Strategy",
+    "description": "Trades breakouts from low volatility periods. High-probability setups.",
+    "entry_rules": [
+      {
+        "indicator": "atr",
+        "condition": "below",
+        "value": "atr_percentile_20",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "bollinger_bands",
+        "condition": "squeeze",
+        "value": "width < 15_percentile",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "price",
+        "condition": "breaks_above",
+        "value": "bollinger_upper",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "volume",
+        "condition": "above",
+        "value": "volume_sma_20 * 1.5",
+        "timeframe": "1d"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "atr",
+        "condition": "expands",
+        "value": "above_average",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "stop_loss",
+        "condition": "reached",
+        "value": 0.02
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "reached",
+        "value": 0.06
+      }
+    ],
+    "market": "stocks",
+    "timeframe": "1d",
+    "risk": {
+      "max_position_size": 0.1,
+      "stop_loss_pct": 0.02,
+      "take_profit_pct": 0.06,
+      "max_daily_loss": 0.025
+    },
+    "examples": [
+      "AAPL",
+      "MSFT",
+      "GOOGL",
+      "TSLA"
+    ],
+    "confidence": 0.86,
+    "historical_winrate": 0.79,
+    "expected_rr": 3.0
+  },
+  {
+    "name": "Institutional Flow Strategy",
+    "description": "Trades based on institutional buying/selling patterns detected from volume analysis.",
+    "entry_rules": [
+      {
+        "indicator": "volume_profile",
+        "condition": "institutional_buying",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "price",
+        "condition": "confirms",
+        "value": "institutional_flow",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "volume",
+        "condition": "above",
+        "value": "volume_sma_20 * 1.5",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "momentum",
+        "condition": "positive",
+        "timeframe": "1d"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "volume_profile",
+        "condition": "institutional_selling",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "stop_loss",
+        "condition": "reached",
+        "value": 0.03
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "reached",
+        "value": 0.07
+      }
+    ],
+    "market": "stocks",
+    "timeframe": "1d",
+    "risk": {
+      "max_position_size": 0.11,
+      "stop_loss_pct": 0.03,
+      "take_profit_pct": 0.07,
+      "max_daily_loss": 0.03
+    },
+    "examples": [
+      "AAPL",
+      "MSFT",
+      "GOOGL",
+      "AMZN",
+      "META"
+    ],
+    "confidence": 0.89,
+    "historical_winrate": 0.81,
+    "expected_rr": 2.33
+  },
+  {
+    "name": "SMA 20/50 Trend Follower",
+    "description": "Trend-following equity strategy using 20/50 SMA cross on liquid large-cap stocks.",
+    "entry_rules": [
+      {
+        "indicator": "price",
+        "condition": "above",
+        "value": "sma_200",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "sma",
+        "field": "close",
+        "period": 20,
+        "condition": "crosses_above",
+        "compare_to": {
+          "indicator": "sma",
+          "field": "close",
+          "period": 50
+        },
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "rsi",
+        "condition": "between",
+        "value": [
+          45,
+          65
+        ],
+        "timeframe": "1d"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "sma",
+        "field": "close",
+        "period": 20,
+        "condition": "crosses_below",
+        "compare_to": {
+          "indicator": "sma",
+          "field": "close",
+          "period": 50
+        },
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "price",
+        "condition": "below",
+        "value": "sma_50",
+        "timeframe": "1d"
+      },
+      {
+        "indicator": "trailing_stop",
+        "condition": "reached",
+        "value": 0.08
+      }
+    ],
+    "market": "stocks",
+    "timeframe": "1d",
+    "risk": {
+      "max_position_size": 0.02,
+      "stop_loss_pct": 0.08,
+      "take_profit_pct": 0.15,
+      "max_daily_loss": 0.15
+    },
+    "examples": [
+      "AAPL",
+      "MSFT",
+      "NVDA"
+    ],
+    "confidence": 0.9,
+    "historical_winrate": 0.56,
+    "expected_rr": 2.0
+  },
+  {
+    "name": "RSI Reversion on Index ETFs",
+    "description": "Mean-reversion strategy on broad index ETFs after short-term oversold conditions.",
+    "entry_rules": [
+      {
+        "indicator": "symbol",
+        "condition": "in",
+        "value": [
+          "SPY",
+          "QQQ",
+          "IWM"
+        ],
+        "timeframe": "4h"
+      },
+      {
+        "indicator": "rsi",
+        "condition": "below",
+        "value": 5,
+        "timeframe": "4h"
+      },
+      {
+        "indicator": "price",
+        "condition": "above",
+        "value": "sma_100",
+        "timeframe": "4h"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "rsi",
+        "condition": "above",
+        "value": 60,
+        "timeframe": "4h"
+      },
+      {
+        "indicator": "profit_target",
+        "condition": "reached",
+        "value": 0.015
+      },
+      {
+        "indicator": "stop_loss",
+        "condition": "reached",
+        "value": 0.01
+      }
+    ],
+    "market": "stocks",
+    "timeframe": "4h",
+    "risk": {
+      "max_position_size": 0.05,
+      "stop_loss_pct": 0.01,
+      "take_profit_pct": 0.015,
+      "max_daily_loss": 0.1
+    },
+    "examples": [
+      "SPY",
+      "QQQ",
+      "IWM"
+    ],
+    "confidence": 0.88,
+    "historical_winrate": 0.7,
+    "expected_rr": 1.3
+  },
+  {
+    "name": "Breakout with Volume Confirmation",
+    "description": "Classic breakout strategy above recent resistance with strong volume confirmation.",
+    "entry_rules": [
+      {
+        "indicator": "price",
+        "condition": "breaks_above",
+        "value": "high_20",
+        "timeframe": "1h"
+      },
+      {
+        "indicator": "volume",
+        "condition": "above",
+        "value": "volume_sma_20 * 1.8",
+        "timeframe": "1h"
+      },
+      {
+        "indicator": "price",
+        "condition": "above",
+        "value": "sma_50",
+        "timeframe": "1h"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "profit_target",
+        "condition": "reached",
+        "value": 0.05
+      },
+      {
+        "indicator": "stop_loss",
+        "condition": "reached",
+        "value": 0.02
+      },
+      {
+        "indicator": "price",
+        "condition": "below",
+        "value": "breakout_level",
+        "timeframe": "1h"
+      }
+    ],
+    "market": "stocks",
+    "timeframe": "1h",
+    "risk": {
+      "max_position_size": 0.015,
+      "stop_loss_pct": 0.02,
+      "take_profit_pct": 0.05,
+      "max_daily_loss": 0.2
+    },
+    "examples": [
+      "AMD",
+      "META",
+      "TSLA"
+    ],
+    "confidence": 0.87,
+    "historical_winrate": 0.52,
+    "expected_rr": 2.2
+  },
+  {
+    "name": "Crypto Trend Rider",
+    "description": "Trend-following on major crypto pairs using EMA 20/50 cross and hourly candles.",
+    "entry_rules": [
+      {
+        "indicator": "symbol",
+        "condition": "in",
+        "value": [
+          "BTCUSD",
+          "ETHUSD",
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "timeframe": "1h"
+      },
+      {
+        "indicator": "ema",
+        "field": "close",
+        "period": 20,
+        "condition": "above",
+        "compare_to": {
+          "indicator": "ema",
+          "field": "close",
+          "period": 50
+        },
+        "timeframe": "1h"
+      },
+      {
+        "indicator": "price",
+        "condition": "between",
+        "value": [
+          "ema_20",
+          "ema_50"
+        ],
+        "timeframe": "1h"
+      },
+      {
+        "indicator": "rsi",
+        "condition": "between",
+        "value": [
+          40,
+          70
+        ],
+        "timeframe": "1h"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "ema",
+        "field": "close",
+        "period": 20,
+        "condition": "crosses_below",
+        "compare_to": {
+          "indicator": "ema",
+          "field": "close",
+          "period": 50
+        },
+        "timeframe": "1h"
+      },
+      {
+        "indicator": "profit_target",
+        "condition": "reached",
+        "value": 0.06
+      },
+      {
+        "indicator": "stop_loss",
+        "condition": "reached",
+        "value": 0.03
+      }
+    ],
+    "market": "crypto",
+    "timeframe": "1h",
+    "risk": {
+      "max_position_size": 0.02,
+      "stop_loss_pct": 0.03,
+      "take_profit_pct": 0.06,
+      "max_daily_loss": 0.25
+    },
+    "examples": [
+      "BTCUSD",
+      "ETHUSD"
+    ],
+    "confidence": 0.89,
+    "historical_winrate": 0.54,
+    "expected_rr": 2.1
+  },
+  {
+    "name": "Crypto Range Fade",
+    "description": "Mean-reversion on large-cap crypto during clearly defined ranges.",
+    "entry_rules": [
+      {
+        "indicator": "price",
+        "condition": "in_range",
+        "value": {
+          "range_pct": 0.08,
+          "duration_days": 3
+        },
+        "timeframe": "15m"
+      },
+      {
+        "indicator": "bollinger_bands",
+        "condition": "flat_to_down",
+        "timeframe": "15m"
+      },
+      {
+        "indicator": "rsi",
+        "condition": "below",
+        "value": 30,
+        "timeframe": "15m"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "price",
+        "condition": "returns_to",
+        "value": "bollinger_mid",
+        "timeframe": "15m"
+      },
+      {
+        "indicator": "profit_target",
+        "condition": "reached",
+        "value": 0.02
+      },
+      {
+        "indicator": "stop_loss",
+        "condition": "reached",
+        "value": 0.015
+      }
+    ],
+    "market": "crypto",
+    "timeframe": "15m",
+    "risk": {
+      "max_position_size": 0.01,
+      "stop_loss_pct": 0.015,
+      "take_profit_pct": 0.02,
+      "max_daily_loss": 0.2
+    },
+    "examples": [
+      "BTCUSD",
+      "ETHUSD"
+    ],
+    "confidence": 0.86,
+    "historical_winrate": 0.6,
+    "expected_rr": 1.5
+  },
+  {
+    "name": "GSIN Seed Strategy 6",
+    "description": "Generic diversified seed strategy template to enrich MCN memory and evolution.",
+    "entry_rules": [
+      {
+        "indicator": "trend",
+        "condition": "confirmed",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "momentum",
+        "condition": "positive",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "volume",
+        "condition": "confirms",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "spread",
+        "condition": "tight",
+        "timeframe": "mixed"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "stop_loss",
+        "condition": "atr_based",
+        "value": "atr_14 * 2",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "time_exit",
+        "condition": "no_move",
+        "value": "N_bars",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "atr_based",
+        "value": "atr_14 * 2.5",
+        "timeframe": "mixed"
+      }
+    ],
+    "market": "mixed",
+    "timeframe": "mixed",
+    "risk": {
+      "max_position_size": 0.01,
+      "stop_loss_pct": 0.02,
+      "take_profit_pct": 0.03,
+      "max_daily_loss": 0.2
+    },
+    "examples": [],
+    "confidence": 0.8,
+    "historical_winrate": 0.55,
+    "expected_rr": 1.8
+  },
+  {
+    "name": "GSIN Seed Strategy 7",
+    "description": "Generic diversified seed strategy template to enrich MCN memory and evolution.",
+    "entry_rules": [
+      {
+        "indicator": "trend",
+        "condition": "confirmed",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "momentum",
+        "condition": "positive",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "volume",
+        "condition": "confirms",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "spread",
+        "condition": "tight",
+        "timeframe": "mixed"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "stop_loss",
+        "condition": "atr_based",
+        "value": "atr_14 * 2",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "time_exit",
+        "condition": "no_move",
+        "value": "N_bars",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "atr_based",
+        "value": "atr_14 * 2.5",
+        "timeframe": "mixed"
+      }
+    ],
+    "market": "mixed",
+    "timeframe": "mixed",
+    "risk": {
+      "max_position_size": 0.01,
+      "stop_loss_pct": 0.02,
+      "take_profit_pct": 0.03,
+      "max_daily_loss": 0.2
+    },
+    "examples": [],
+    "confidence": 0.8,
+    "historical_winrate": 0.55,
+    "expected_rr": 1.8
+  },
+  {
+    "name": "GSIN Seed Strategy 8",
+    "description": "Generic diversified seed strategy template to enrich MCN memory and evolution.",
+    "entry_rules": [
+      {
+        "indicator": "trend",
+        "condition": "confirmed",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "momentum",
+        "condition": "positive",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "volume",
+        "condition": "confirms",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "spread",
+        "condition": "tight",
+        "timeframe": "mixed"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "stop_loss",
+        "condition": "atr_based",
+        "value": "atr_14 * 2",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "time_exit",
+        "condition": "no_move",
+        "value": "N_bars",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "atr_based",
+        "value": "atr_14 * 2.5",
+        "timeframe": "mixed"
+      }
+    ],
+    "market": "mixed",
+    "timeframe": "mixed",
+    "risk": {
+      "max_position_size": 0.01,
+      "stop_loss_pct": 0.02,
+      "take_profit_pct": 0.03,
+      "max_daily_loss": 0.2
+    },
+    "examples": [],
+    "confidence": 0.8,
+    "historical_winrate": 0.55,
+    "expected_rr": 1.8
+  },
+  {
+    "name": "GSIN Seed Strategy 9",
+    "description": "Generic diversified seed strategy template to enrich MCN memory and evolution.",
+    "entry_rules": [
+      {
+        "indicator": "trend",
+        "condition": "confirmed",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "momentum",
+        "condition": "positive",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "volume",
+        "condition": "confirms",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "spread",
+        "condition": "tight",
+        "timeframe": "mixed"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "stop_loss",
+        "condition": "atr_based",
+        "value": "atr_14 * 2",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "time_exit",
+        "condition": "no_move",
+        "value": "N_bars",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "atr_based",
+        "value": "atr_14 * 2.5",
+        "timeframe": "mixed"
+      }
+    ],
+    "market": "mixed",
+    "timeframe": "mixed",
+    "risk": {
+      "max_position_size": 0.01,
+      "stop_loss_pct": 0.02,
+      "take_profit_pct": 0.03,
+      "max_daily_loss": 0.2
+    },
+    "examples": [],
+    "confidence": 0.8,
+    "historical_winrate": 0.55,
+    "expected_rr": 1.8
+  },
+  {
+    "name": "GSIN Seed Strategy 10",
+    "description": "Generic diversified seed strategy template to enrich MCN memory and evolution.",
+    "entry_rules": [
+      {
+        "indicator": "trend",
+        "condition": "confirmed",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "momentum",
+        "condition": "positive",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "volume",
+        "condition": "confirms",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "spread",
+        "condition": "tight",
+        "timeframe": "mixed"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "stop_loss",
+        "condition": "atr_based",
+        "value": "atr_14 * 2",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "time_exit",
+        "condition": "no_move",
+        "value": "N_bars",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "atr_based",
+        "value": "atr_14 * 2.5",
+        "timeframe": "mixed"
+      }
+    ],
+    "market": "mixed",
+    "timeframe": "mixed",
+    "risk": {
+      "max_position_size": 0.01,
+      "stop_loss_pct": 0.02,
+      "take_profit_pct": 0.03,
+      "max_daily_loss": 0.2
+    },
+    "examples": [],
+    "confidence": 0.8,
+    "historical_winrate": 0.55,
+    "expected_rr": 1.8
+  },
+  {
+    "name": "GSIN Seed Strategy 11",
+    "description": "Generic diversified seed strategy template to enrich MCN memory and evolution.",
+    "entry_rules": [
+      {
+        "indicator": "trend",
+        "condition": "confirmed",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "momentum",
+        "condition": "positive",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "volume",
+        "condition": "confirms",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "spread",
+        "condition": "tight",
+        "timeframe": "mixed"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "stop_loss",
+        "condition": "atr_based",
+        "value": "atr_14 * 2",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "time_exit",
+        "condition": "no_move",
+        "value": "N_bars",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "atr_based",
+        "value": "atr_14 * 2.5",
+        "timeframe": "mixed"
+      }
+    ],
+    "market": "mixed",
+    "timeframe": "mixed",
+    "risk": {
+      "max_position_size": 0.01,
+      "stop_loss_pct": 0.02,
+      "take_profit_pct": 0.03,
+      "max_daily_loss": 0.2
+    },
+    "examples": [],
+    "confidence": 0.8,
+    "historical_winrate": 0.55,
+    "expected_rr": 1.8
+  },
+  {
+    "name": "GSIN Seed Strategy 12",
+    "description": "Generic diversified seed strategy template to enrich MCN memory and evolution.",
+    "entry_rules": [
+      {
+        "indicator": "trend",
+        "condition": "confirmed",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "momentum",
+        "condition": "positive",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "volume",
+        "condition": "confirms",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "spread",
+        "condition": "tight",
+        "timeframe": "mixed"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "stop_loss",
+        "condition": "atr_based",
+        "value": "atr_14 * 2",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "time_exit",
+        "condition": "no_move",
+        "value": "N_bars",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "atr_based",
+        "value": "atr_14 * 2.5",
+        "timeframe": "mixed"
+      }
+    ],
+    "market": "mixed",
+    "timeframe": "mixed",
+    "risk": {
+      "max_position_size": 0.01,
+      "stop_loss_pct": 0.02,
+      "take_profit_pct": 0.03,
+      "max_daily_loss": 0.2
+    },
+    "examples": [],
+    "confidence": 0.8,
+    "historical_winrate": 0.55,
+    "expected_rr": 1.8
+  },
+  {
+    "name": "GSIN Seed Strategy 13",
+    "description": "Generic diversified seed strategy template to enrich MCN memory and evolution.",
+    "entry_rules": [
+      {
+        "indicator": "trend",
+        "condition": "confirmed",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "momentum",
+        "condition": "positive",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "volume",
+        "condition": "confirms",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "spread",
+        "condition": "tight",
+        "timeframe": "mixed"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "stop_loss",
+        "condition": "atr_based",
+        "value": "atr_14 * 2",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "time_exit",
+        "condition": "no_move",
+        "value": "N_bars",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "atr_based",
+        "value": "atr_14 * 2.5",
+        "timeframe": "mixed"
+      }
+    ],
+    "market": "mixed",
+    "timeframe": "mixed",
+    "risk": {
+      "max_position_size": 0.01,
+      "stop_loss_pct": 0.02,
+      "take_profit_pct": 0.03,
+      "max_daily_loss": 0.2
+    },
+    "examples": [],
+    "confidence": 0.8,
+    "historical_winrate": 0.55,
+    "expected_rr": 1.8
+  },
+  {
+    "name": "GSIN Seed Strategy 14",
+    "description": "Generic diversified seed strategy template to enrich MCN memory and evolution.",
+    "entry_rules": [
+      {
+        "indicator": "trend",
+        "condition": "confirmed",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "momentum",
+        "condition": "positive",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "volume",
+        "condition": "confirms",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "spread",
+        "condition": "tight",
+        "timeframe": "mixed"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "stop_loss",
+        "condition": "atr_based",
+        "value": "atr_14 * 2",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "time_exit",
+        "condition": "no_move",
+        "value": "N_bars",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "atr_based",
+        "value": "atr_14 * 2.5",
+        "timeframe": "mixed"
+      }
+    ],
+    "market": "mixed",
+    "timeframe": "mixed",
+    "risk": {
+      "max_position_size": 0.01,
+      "stop_loss_pct": 0.02,
+      "take_profit_pct": 0.03,
+      "max_daily_loss": 0.2
+    },
+    "examples": [],
+    "confidence": 0.8,
+    "historical_winrate": 0.55,
+    "expected_rr": 1.8
+  },
+  {
+    "name": "GSIN Seed Strategy 15",
+    "description": "Generic diversified seed strategy template to enrich MCN memory and evolution.",
+    "entry_rules": [
+      {
+        "indicator": "trend",
+        "condition": "confirmed",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "momentum",
+        "condition": "positive",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "volume",
+        "condition": "confirms",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "spread",
+        "condition": "tight",
+        "timeframe": "mixed"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "stop_loss",
+        "condition": "atr_based",
+        "value": "atr_14 * 2",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "time_exit",
+        "condition": "no_move",
+        "value": "N_bars",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "atr_based",
+        "value": "atr_14 * 2.5",
+        "timeframe": "mixed"
+      }
+    ],
+    "market": "mixed",
+    "timeframe": "mixed",
+    "risk": {
+      "max_position_size": 0.01,
+      "stop_loss_pct": 0.02,
+      "take_profit_pct": 0.03,
+      "max_daily_loss": 0.2
+    },
+    "examples": [],
+    "confidence": 0.8,
+    "historical_winrate": 0.55,
+    "expected_rr": 1.8
+  },
+  {
+    "name": "GSIN Seed Strategy 16",
+    "description": "Generic diversified seed strategy template to enrich MCN memory and evolution.",
+    "entry_rules": [
+      {
+        "indicator": "trend",
+        "condition": "confirmed",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "momentum",
+        "condition": "positive",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "volume",
+        "condition": "confirms",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "spread",
+        "condition": "tight",
+        "timeframe": "mixed"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "stop_loss",
+        "condition": "atr_based",
+        "value": "atr_14 * 2",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "time_exit",
+        "condition": "no_move",
+        "value": "N_bars",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "atr_based",
+        "value": "atr_14 * 2.5",
+        "timeframe": "mixed"
+      }
+    ],
+    "market": "mixed",
+    "timeframe": "mixed",
+    "risk": {
+      "max_position_size": 0.01,
+      "stop_loss_pct": 0.02,
+      "take_profit_pct": 0.03,
+      "max_daily_loss": 0.2
+    },
+    "examples": [],
+    "confidence": 0.8,
+    "historical_winrate": 0.55,
+    "expected_rr": 1.8
+  },
+  {
+    "name": "GSIN Seed Strategy 17",
+    "description": "Generic diversified seed strategy template to enrich MCN memory and evolution.",
+    "entry_rules": [
+      {
+        "indicator": "trend",
+        "condition": "confirmed",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "momentum",
+        "condition": "positive",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "volume",
+        "condition": "confirms",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "spread",
+        "condition": "tight",
+        "timeframe": "mixed"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "stop_loss",
+        "condition": "atr_based",
+        "value": "atr_14 * 2",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "time_exit",
+        "condition": "no_move",
+        "value": "N_bars",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "atr_based",
+        "value": "atr_14 * 2.5",
+        "timeframe": "mixed"
+      }
+    ],
+    "market": "mixed",
+    "timeframe": "mixed",
+    "risk": {
+      "max_position_size": 0.01,
+      "stop_loss_pct": 0.02,
+      "take_profit_pct": 0.03,
+      "max_daily_loss": 0.2
+    },
+    "examples": [],
+    "confidence": 0.8,
+    "historical_winrate": 0.55,
+    "expected_rr": 1.8
+  },
+  {
+    "name": "GSIN Seed Strategy 18",
+    "description": "Generic diversified seed strategy template to enrich MCN memory and evolution.",
+    "entry_rules": [
+      {
+        "indicator": "trend",
+        "condition": "confirmed",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "momentum",
+        "condition": "positive",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "volume",
+        "condition": "confirms",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "spread",
+        "condition": "tight",
+        "timeframe": "mixed"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "stop_loss",
+        "condition": "atr_based",
+        "value": "atr_14 * 2",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "time_exit",
+        "condition": "no_move",
+        "value": "N_bars",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "atr_based",
+        "value": "atr_14 * 2.5",
+        "timeframe": "mixed"
+      }
+    ],
+    "market": "mixed",
+    "timeframe": "mixed",
+    "risk": {
+      "max_position_size": 0.01,
+      "stop_loss_pct": 0.02,
+      "take_profit_pct": 0.03,
+      "max_daily_loss": 0.2
+    },
+    "examples": [],
+    "confidence": 0.8,
+    "historical_winrate": 0.55,
+    "expected_rr": 1.8
+  },
+  {
+    "name": "GSIN Seed Strategy 19",
+    "description": "Generic diversified seed strategy template to enrich MCN memory and evolution.",
+    "entry_rules": [
+      {
+        "indicator": "trend",
+        "condition": "confirmed",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "momentum",
+        "condition": "positive",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "volume",
+        "condition": "confirms",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "spread",
+        "condition": "tight",
+        "timeframe": "mixed"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "stop_loss",
+        "condition": "atr_based",
+        "value": "atr_14 * 2",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "time_exit",
+        "condition": "no_move",
+        "value": "N_bars",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "atr_based",
+        "value": "atr_14 * 2.5",
+        "timeframe": "mixed"
+      }
+    ],
+    "market": "mixed",
+    "timeframe": "mixed",
+    "risk": {
+      "max_position_size": 0.01,
+      "stop_loss_pct": 0.02,
+      "take_profit_pct": 0.03,
+      "max_daily_loss": 0.2
+    },
+    "examples": [],
+    "confidence": 0.8,
+    "historical_winrate": 0.55,
+    "expected_rr": 1.8
+  },
+  {
+    "name": "GSIN Seed Strategy 20",
+    "description": "Generic diversified seed strategy template to enrich MCN memory and evolution.",
+    "entry_rules": [
+      {
+        "indicator": "trend",
+        "condition": "confirmed",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "momentum",
+        "condition": "positive",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "volume",
+        "condition": "confirms",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "spread",
+        "condition": "tight",
+        "timeframe": "mixed"
+      }
+    ],
+    "exit_rules": [
+      {
+        "indicator": "stop_loss",
+        "condition": "atr_based",
+        "value": "atr_14 * 2",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "time_exit",
+        "condition": "no_move",
+        "value": "N_bars",
+        "timeframe": "mixed"
+      },
+      {
+        "indicator": "take_profit",
+        "condition": "atr_based",
+        "value": "atr_14 * 2.5",
+        "timeframe": "mixed"
+      }
+    ],
+    "market": "mixed",
+    "timeframe": "mixed",
+    "risk": {
+      "max_position_size": 0.01,
+      "stop_loss_pct": 0.02,
+      "take_profit_pct": 0.03,
+      "max_daily_loss": 0.2
+    },
+    "examples": [],
+    "confidence": 0.8,
+    "historical_winrate": 0.55,
+    "expected_rr": 1.8
+  }
+]
