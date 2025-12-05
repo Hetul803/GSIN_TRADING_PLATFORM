@@ -39,8 +39,12 @@ MATURE_MAX_DRAWDOWN_MAX = 10.0  # 10%
 # ============================================================================
 
 # Experiment → Candidate
-MIN_TRADES_FOR_CANDIDATE = 50
-WIN_RATE_THRESHOLD_CANDIDATE = 0.75  # 75%
+# PERMANENT CHANGE: Reduced from 50 to 20 for swing trading strategies (trade once a week)
+# Do not change back to 50 unless you only want scalpers
+MIN_TRADES_FOR_CANDIDATE = 20
+# PERMANENT CHANGE: Reduced from 0.75 to 0.40 for trend following strategies (40% win rate but big wins)
+# Keep this low, BUT ensure profit_factor > 1.2 is checked alongside it
+WIN_RATE_THRESHOLD_CANDIDATE = 0.40  # 40% (was 75%)
 MAX_DRAWDOWN_FOR_CANDIDATE = 0.30  # 30%
 
 # Candidate → Proposable (Base Requirements)
@@ -50,11 +54,15 @@ MAX_DRAWDOWN_FOR_CANDIDATE = 0.30  # 30%
 MIN_TRADES_FOR_PROPOSABLE = 50
 WIN_RATE_THRESHOLD_PROPOSABLE_HIGH_WIN = 0.80  # 80% win rate (Path 1)
 WIN_RATE_THRESHOLD_PROPOSABLE_HIGH_SHARPE = 0.60  # 60% win rate (Path 2)
-MIN_SHARPE_FOR_PROPOSABLE_HIGH_WIN = 1.0  # Sharpe for Path 1
+# TEMPORARY CHANGE: Reduced from 1.0 to 0.7 to verify pipeline works
+# Change back to 1.0 or 1.2 after ~1 week when you have too many strategies and need to filter harder
+MIN_SHARPE_FOR_PROPOSABLE_HIGH_WIN = 0.7  # Sharpe for Path 1 (was 1.0, temporary)
 MIN_SHARPE_FOR_PROPOSABLE_HIGH_SHARPE = 1.5  # Sharpe for Path 2 (higher to ensure profitability)
 MIN_PROFIT_FACTOR_FOR_PROPOSABLE = 1.2  # Unified profit factor (ensures profitability: avg win > avg loss)
 MAX_DRAWDOWN_FOR_PROPOSABLE = 0.20  # 20%
-MIN_SCORE_FOR_PROPOSABLE = 0.70
+# TEMPORARY CHANGE: Reduced from 0.70 to 0.60 because strategies are getting 0.66
+# Change back to 0.70 once the AI gets smarter and starts producing 0.75+ strategies naturally
+MIN_SCORE_FOR_PROPOSABLE = 0.60  # (was 0.70, temporary)
 MIN_TEST_WIN_RATE = 0.70  # Anti-overfitting (lowered from 0.75 to be more realistic)
 
 # Candidate → Proposable (MCN Robustness Requirements)
@@ -86,7 +94,9 @@ ROBUSTNESS_PARAMETER_SENSITIVITY_TESTS = 2  # Number of small perturbations to t
 # Candidate → Proposable (Monitoring Worker)
 # FIXED: Unified profit factor to 1.2 (same as status_manager) to avoid contradictions
 MONITORING_ROBUSTNESS_SCORE_MIN = 70  # 0-100 scale
-MONITORING_SHARPE_MIN = 1.0
+# TEMPORARY CHANGE: Reduced from 1.0 to 0.7 to match MIN_SHARPE_FOR_PROPOSABLE_HIGH_WIN
+# Change back to 1.0 after ~1 week when you have too many strategies and need to filter harder
+MONITORING_SHARPE_MIN = 0.7  # (was 1.0, temporary)
 MONITORING_PROFIT_FACTOR_MIN = 1.2  # Unified to 1.2 (was 1.3) - ensures profitability
 MONITORING_MAX_DRAWDOWN_MAX = 0.25  # 25%
 

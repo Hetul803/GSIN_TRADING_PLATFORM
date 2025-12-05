@@ -114,10 +114,14 @@ def determine_strategy_status(
     
     # Transition: experiment → candidate
     if current_status == StrategyStatus.EXPERIMENT:
+        # PERMANENT CHANGE: Win rate lowered to 0.40 for trend following strategies
+        # Must check profit_factor > 1.2 alongside low win rate to ensure profitability
+        profit_factor = metrics.get("profit_factor", 0.0) or backtest_results.get("profit_factor", 0.0)
         if (
             total_trades >= MIN_TRADES_FOR_EVAL and
             win_rate >= WIN_RATE_THRESHOLD_CANDIDATE and
-            max_drawdown <= 0.30  # Allow up to 30% drawdown for candidates
+            max_drawdown <= 0.30 and  # Allow up to 30% drawdown for candidates
+            profit_factor >= 1.2  # Ensure profitability even with low win rate (trend following)
         ):
             return (StrategyStatus.CANDIDATE, False)
         else:

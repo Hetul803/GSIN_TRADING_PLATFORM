@@ -280,6 +280,17 @@ class Trade(Base):
     group: Mapped["Group | None"] = relationship("Group", back_populates="trades")
 
 class UserStrategy(Base):
+    """
+    User Strategy Model - Designed for Genetic Algorithm Evolution.
+    
+    This model supports the evolution worker's genetic algorithm by tracking:
+    - Status progression: experiment → candidate → proposable → discarded
+    - Backtest metrics: results, train/test metrics for overfitting detection
+    - Evolution tracking: attempts, score, promotion flags
+    - Lineage: Parent-child relationships via StrategyLineage table (not direct parent_id)
+    
+    Note: 'generation' is calculated dynamically from StrategyLineage, not stored.
+    """
     __tablename__ = "user_strategies"
     id: Mapped[str] = mapped_column(String, primary_key=True, index=True)  # UUID as string
     user_id: Mapped[str] = mapped_column(String, ForeignKey("users.id", ondelete="CASCADE"), index=True)
@@ -288,15 +299,19 @@ class UserStrategy(Base):
     parameters: Mapped[dict] = mapped_column(JSON)  # Strategy parameters (JSON)
     ruleset: Mapped[dict] = mapped_column(JSON)  # Strategy ruleset/logic (JSON)
     asset_type: Mapped[AssetType] = mapped_column(SQLEnum(AssetType), default=AssetType.STOCK)
-    score: Mapped[float | None] = mapped_column(Float, nullable=True)  # Unified strategy score (0-1)
-    status: Mapped[str] = mapped_column(String(32), default="experiment", index=True)  # experiment, candidate, proposable, discarded - Indexed for frequent filtering
-    last_backtest_at: Mapped[DateTime | None] = mapped_column(DateTime(timezone=True), nullable=True, index=True)  # Indexed for filtering strategies pending backtest
-    last_backtest_results: Mapped[dict | None] = mapped_column(JSON, nullable=True)  # Latest backtest results
+    
+    # GENETIC ALGORITHM FIELDS (Required by evolution_worker.py)
+    score: Mapped[float | None] = mapped_column(Float, nullable=True)  # Unified strategy score (0-1) - Used for ranking
+    status: Mapped[str] = mapped_column(String(32), default="experiment", index=True)  # experiment, candidate, proposable, discarded - CRITICAL for promotion tracking
+    last_backtest_at: Mapped[DateTime | None] = mapped_column(DateTime(timezone=True), nullable=True, index=True)  # Used for prioritization in evolution cycles
+    last_backtest_results: Mapped[dict | None] = mapped_column(JSON, nullable=True)  # Latest backtest results - CRITICAL for status determination
     train_metrics: Mapped[dict | None] = mapped_column(JSON, nullable=True)  # Train set metrics (for overfitting detection)
     test_metrics: Mapped[dict | None] = mapped_column(JSON, nullable=True)  # Test set metrics (for overfitting detection)
+    evolution_attempts: Mapped[int] = mapped_column(Integer, default=0)  # Number of mutation/evolution attempts - CRITICAL for discard logic
+    is_proposable: Mapped[bool] = mapped_column(Boolean, default=False)  # True if status="proposable" and meets all thresholds - CRITICAL promotion flag
+    
+    # ADDITIONAL FIELDS
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
-    is_proposable: Mapped[bool] = mapped_column(Boolean, default=False)  # True if status="proposable" and meets all thresholds
-    evolution_attempts: Mapped[int] = mapped_column(Integer, default=0)  # Number of mutation/evolution attempts
     generalized: Mapped[bool] = mapped_column(Boolean, default=False)  # True if strategy performs well on >2 assets
     per_symbol_performance: Mapped[dict | None] = mapped_column(JSON, nullable=True)  # Performance metrics per symbol (for generalized strategies)
     explanation_human: Mapped[str | None] = mapped_column(Text, nullable=True)  # PHASE 1: Human-readable explanation of strategy
@@ -305,6 +320,8 @@ class UserStrategy(Base):
     updated_at: Mapped[DateTime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     
     # Relationships
+    # Note: Parent relationships are tracked via StrategyLineage table, not a direct parent_id column
+    # This allows for multiple parents (crossover mutations) and complex lineage trees
     user: Mapped["User"] = relationship("User", back_populates="strategies")
     backtests: Mapped[list["StrategyBacktest"]] = relationship("StrategyBacktest", back_populates="strategy", cascade="all, delete-orphan")
     parent_lineages: Mapped[list["StrategyLineage"]] = relationship("StrategyLineage", foreign_keys="StrategyLineage.parent_strategy_id", back_populates="parent_strategy")
