@@ -6,12 +6,12 @@ from typing import Dict
 
 # PHASE 2: Dynamic minimum candle requirements by timeframe
 REQUIRED_CANDLES: Dict[str, int] = {
-    "1d": 350,   # Daily: ~1 year of trading days
-    "4h": 150,   # 4-hour: ~25 days
-    "1h": 100,   # Hourly: ~4-5 days
-    "15m": 60,   # 15-minute: ~15 hours
-    "5m": 50,    # 5-minute: ~4 hours
-    "1m": 30     # 1-minute: ~30 minutes
+    "1d": 3000,   # Daily: ~12 years of trading days
+    "4h": 500,    # 4-hour: ~83 days
+    "1h": 200,    # Hourly: ~8-10 days
+    "15m": 100,   # 15-minute: ~25 hours
+    "5m": 100,    # 5-minute: ~8 hours
+    "1m": 60      # 1-minute: ~1 hour
 }
 
 def get_required_candles(timeframe: str) -> int:
@@ -24,5 +24,5 @@ def get_required_candles(timeframe: str) -> int:
     Returns:
         Minimum number of candles required
     """
-    return REQUIRED_CANDLES.get(timeframe.lower(), 50)  # Default to 50 if unknown
+    return REQUIRED_CANDLES.get(timeframe.lower(), 1000)  # Default to 1000 if unknown
 
